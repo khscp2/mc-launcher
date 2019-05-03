@@ -1,0 +1,23 @@
+{
+  "name": "mc-launcher",
+  "version": "1.0.0",
+  "description": "The script that our class uses to boot minecraft without IT permission from the school ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khscp2/mc-launcher.git"
+  },
+  "author": "Pierce Harriz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/khscp2/mc-launcher/issues"
+  },
+  "homepage": "https://github.com/khscp2/mc-launcher#readme",
+  "dependencies": {
+    "minecraft-launcher-core": "^2.6.1",
+    "prompt": "^1.0.0"
+  }
+}
