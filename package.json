@@ -1,6 +1,6 @@
 {
   "name": "mc-launcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The script that our class uses to boot minecraft without IT permission from the school ",
   "main": "index.js",
   "scripts": {

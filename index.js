@@ -7,6 +7,8 @@ let base = {
         clientPackage: null,
         root: "./minecraft",
         java: "./jre/bin/java.exe",
+        os: "windows",
+        authorization: {},
         version: {
             number: "1.14",
             type: "release"
@@ -17,7 +19,6 @@ let base = {
         },
         customArgs: ["-XX:+UnlockExperimentalVMOptions"]
     },
-    authorization: {},
     cracked: false
 };
 
@@ -28,7 +29,7 @@ if(fs.existsSync('./config.json')) {
         console.log("[Launcher] Skipping account validation!");
         launch()
     } else {
-        launcher.authenticator.validate(base.authorization.access_token).then(response => {
+        launcher.authenticator.validate(base.options.authorization.access_token).then(response => {
             if(response) {
                 launch();
             } else {
@@ -44,16 +45,7 @@ if(fs.existsSync('./config.json')) {
 }
 
 function launch() {
-    launcher.core({
-        authorization: base.authorization,
-        clientPackage: base.options.clientPackage,
-        root: base.options.root,
-        os: "windows",
-        javaPath: base.options.java,
-        version: base.options.version,
-        memory: base.options.memory,
-        customArgs: base.options.customArgs
-    });
+    launcher.core(base.options);
 }
 
 function startPrompt() {
@@ -64,7 +56,7 @@ function startPrompt() {
         name: "password"
     }], async function(error, results) {
         if(!results.password) base.cracked = true;
-        base.authorization = await launcher.authenticator.getAuth(results.username, results.password);
+        base.options.authorization = await launcher.authenticator.getAuth(results.username, results.password);
         fs.writeFileSync('./config.json', JSON.stringify(base,null, 2));
         launch();
     });
