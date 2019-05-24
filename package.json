@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/khscp2/mc-launcher#readme",
   "dependencies": {
-    "minecraft-launcher-core": "^2.6.1",
+    "minecraft-launcher-core": "^3.1.0",
     "prompt": "^1.0.0"
   }
 }

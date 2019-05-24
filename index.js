@@ -1,14 +1,14 @@
-const launcher = require('minecraft-launcher-core');
+const { Client, Authenticator } = require('minecraft-launcher-core');
 const prompt = require('prompt');
 const fs = require('fs');
 
 let base = {
     options: {
+        authorization: {},
         clientPackage: null,
         root: "./minecraft",
         java: "./jre/bin/java.exe",
         os: "windows",
-        authorization: {},
         version: {
             number: "1.14",
             type: "release"
@@ -27,10 +27,10 @@ if(fs.existsSync('./config.json')) {
     console.log("[launcher] Loaded config from file. Checking if token is valid!");
     if(base.cracked) {
         console.log("[Launcher] Skipping account validation!");
-        launch()
     } else {
-        launcher.authenticator.validate(base.options.authorization.access_token).then(response => {
+        Authenticator.validate(base.options.authorization.access_token).then(response => {
             if(response) {
+                console.log("[Launcher] Validated account, starting!")
                 launch();
             } else {
                 console.log("[Launcher] Failed to validate account, please login again!");
@@ -39,13 +39,15 @@ if(fs.existsSync('./config.json')) {
         });
     }
 } else {
-    fs.writeFileSync('./config.json', JSON.stringify(base,null, 2));
+    fs.writeFileSync('./config.json', JSON.stringify(base, null, 2));
     console.log("[Launcher] Created base config file!");
     startPrompt()
 }
 
+const launcher = new Client(base.options);
+
 function launch() {
-    launcher.core(base.options);
+    launcher.launch(base.options.authorization);
 }
 
 function startPrompt() {
@@ -56,12 +58,12 @@ function startPrompt() {
         name: "password"
     }], async function(error, results) {
         if(!results.password) base.cracked = true;
-        base.options.authorization = await launcher.authenticator.getAuth(results.username, results.password);
+        base.options.authorization = await Authenticator.getAuth(results.username, results.password);
         fs.writeFileSync('./config.json', JSON.stringify(base,null, 2));
         launch();
     });
 }
 
-launcher.event.on('data', (data) => console.log(data.toString('utf8')));
-launcher.event.on('download', (data) => console.log(data));
-launcher.event.on('debug', (data) => console.log(data));
+launcher.on('data', (data) => console.log(data.toString('utf8')));
+launcher.on('download', (data) => console.log(data));
+launcher.on('debug', (data) => console.log(data));
